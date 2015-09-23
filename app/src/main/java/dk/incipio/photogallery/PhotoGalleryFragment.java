@@ -73,11 +73,21 @@ public class PhotoGalleryFragment extends Fragment {
             mGridView.setAdapter(null);
         }
     }
+
+
     private class FetchItemsTask extends AsyncTask<Void,Void, ArrayList<GalleryItem>> {
 
         @Override
         protected ArrayList<GalleryItem> doInBackground(Void... voids) {
-            return new FlickerFetchr().fetchItems();
+
+            // Just for testing
+            String query = "Beer";
+
+            if (query != null) {
+                return new FlickerFetchr().search(query);
+            } else {
+                return new FlickerFetchr().fetchItems();
+            }
         }
 
         @Override

@@ -54,7 +54,7 @@ public class ThumbnailDownLoader<Token> extends HandlerThread {
     }
 
     public void queueThumbnail(Token token, String url) {
-        Log.d(TAG, "queueThumbnail() called with: " + "token = [" + token + "], url = [" + url + "]");
+        Log.i(TAG, "queueThumbnail() called with url = [" + url + "]");
         
         requestMap.put(token, url);
         mHandler.obtainMessage(MESSAGE_DOWNLOAD, token).sendToTarget();
