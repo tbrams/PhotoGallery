@@ -1,10 +1,12 @@
 package dk.incipio.photogallery;
 
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -34,8 +36,8 @@ public class PhotoGalleryFragment extends Fragment {
         setRetainInstance(true);
         setHasOptionsMenu(true);
 
-        // Start AsyncTask, fire up the background thread and call doInBackground(...)
-        new FetchItemsTask().execute();
+        updateItems();
+
 
         mThumbnailThread = new ThumbnailDownLoader<ImageView>(new Handler());
         mThumbnailThread.setListener(new ThumbnailDownLoader.Listener<ImageView>(){
@@ -48,6 +50,11 @@ public class PhotoGalleryFragment extends Fragment {
         mThumbnailThread.start();
         mThumbnailThread.getLooper();
         Log.i(TAG, "Background thread started");
+    }
+
+    public void updateItems() {
+        // Start AsyncTask, fire up the background thread and call doInBackground(...)
+        new FetchItemsTask().execute();
     }
 
 
@@ -107,8 +114,12 @@ public class PhotoGalleryFragment extends Fragment {
         @Override
         protected ArrayList<GalleryItem> doInBackground(Void... voids) {
 
-            // Just for testing
-            String query = "Beer";
+            Activity activity = getActivity();
+            if (activity==null)
+                return new ArrayList<GalleryItem>();
+
+            String query = PreferenceManager.getDefaultSharedPreferences(activity)
+                    .getString(FlickerFetchr.PREF_SEARCH_QUERY, null);
 
             if (query != null) {
                 return new FlickerFetchr().search(query);

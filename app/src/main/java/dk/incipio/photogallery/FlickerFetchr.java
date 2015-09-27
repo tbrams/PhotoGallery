@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 public class FlickerFetchr {
     private static final String TAG = "FlickerFetchr";
+    public static final String PREF_SEARCH_QUERY = "searchQuery";
     private static final String ENDPOINT = "https://api.flickr.com/services/rest";
     private static final String METHOD_GET_RECENT = "flickr.photos.getRecent";
     private static final String METHOD_SEARCH = "flickr.photos.search";
