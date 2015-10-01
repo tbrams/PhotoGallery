@@ -18,8 +18,9 @@ import java.util.ArrayList;
 
 public class PollService extends IntentService {
     private static final String TAG = "dk.incipio.photogallery.PollService";
-    private static final int POLL_INTERVAL = 1000*60*5; // check for news every 5 minutes
+    private static final int POLL_INTERVAL = 1000*15; // check for news every 15 seconds
     public static final String PREF_IS_ALARM_ON ="isAlarmOn";
+    public static final String ACTION_SHOW_NOTIFICATION ="dk.incipio.photogallery.SHOW_NOTIFICATION";
 
     public PollService() {
         super(TAG);
@@ -67,6 +68,8 @@ public class PollService extends IntentService {
                     .build();
             NotificationManager notificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.notify(0,notification);
+
+            sendBroadcast(new Intent(ACTION_SHOW_NOTIFICATION));
 
         } else {
             Log.i(TAG,"Old result: "+ resultId);
