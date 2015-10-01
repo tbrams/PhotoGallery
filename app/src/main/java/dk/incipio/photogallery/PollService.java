@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class PollService extends IntentService {
     private static final String TAG = "dk.incipio.photogallery.PollService";
     private static final int POLL_INTERVAL = 1000*60*5; // check for news every 5 minutes
+    public static final String PREF_IS_ALARM_ON ="isAlarmOn";
 
     public PollService() {
         super(TAG);
@@ -96,6 +97,14 @@ public class PollService extends IntentService {
             alarmManager.cancel(pi);
             pi.cancel();
         }
+
+        // The receiver needs to know whether the alarm should be on or off. So we use
+        // a preference to store that...
+        PreferenceManager.getDefaultSharedPreferences(context)
+                .edit()
+                .putBoolean(PollService.PREF_IS_ALARM_ON, isOn)
+                .commit();
+
     }
 
     public static boolean isServiceAlarmOn(Context context) {
