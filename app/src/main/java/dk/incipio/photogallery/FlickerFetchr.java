@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class FlickerFetchr {
     private static final String TAG = "FlickerFetchr";
     public static final String PREF_SEARCH_QUERY = "searchQuery";
+    public static final String PREF_LAST_RESULT_ID = "lastResultId";
     private static final String ENDPOINT = "https://api.flickr.com/services/rest";
     private static final String METHOD_GET_RECENT = "flickr.photos.getRecent";
     private static final String METHOD_SEARCH = "flickr.photos.search";
@@ -25,6 +26,8 @@ public class FlickerFetchr {
     private static final String PARAM_TEXT = "text";
     private static final String EXTRA_SMALL_URL = "url_s";
     private static final String XML_PHOTO = "photo";
+    private static final String XML_RESULT="result";
+    private String total;
 
     public byte[] getUrlBytes(String urlSpec) throws IOException {
 
@@ -113,6 +116,10 @@ public class FlickerFetchr {
     public void parseItems(ArrayList<GalleryItem> items, XmlPullParser parser) throws XmlPullParserException, IOException {
         int eventType = parser.next();
         while (eventType!=XmlPullParser.END_DOCUMENT) {
+            if(eventType==XmlPullParser.START_TAG && XML_PHOTO.equals(parser.getName())){
+                String total=parser.getAttributeValue(null, XML_RESULT);
+                setTotal(total);
+            }
             if (eventType==XmlPullParser.START_TAG && XML_PHOTO.equals(parser.getName())) {
                 String id = parser.getAttributeValue(null, "id");
                 String caption = parser.getAttributeValue(null, "title");
@@ -127,5 +134,13 @@ public class FlickerFetchr {
 
             eventType = parser.next();
         }
+    }
+
+    public void setTotal(String total) {
+        this.total = total;
+    }
+
+    public String getTotal() {
+        return total;
     }
 }

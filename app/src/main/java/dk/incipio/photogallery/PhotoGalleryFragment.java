@@ -1,6 +1,7 @@
 package dk.incipio.photogallery;
 
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
@@ -44,6 +45,12 @@ public class PhotoGalleryFragment extends Fragment {
 
         updateItems();
 
+        // Service Startup
+        //Intent i = new Intent(getActivity(),PollService.class);
+        //getActivity().startService(i);
+
+        // Test
+        //PollService.setServiceAlarm(getActivity(), true);
 
         mThumbnailThread = new ThumbnailDownLoader<ImageView>(new Handler());
         mThumbnailThread.setListener(new ThumbnailDownLoader.Listener<ImageView>(){
@@ -90,11 +97,26 @@ public class PhotoGalleryFragment extends Fragment {
 
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        MenuItem toggleItem = menu.findItem(R.id.menu_item_toggle_polling);
+        if (PollService.isServiceAlarmOn(getActivity())) {
+            toggleItem.setTitle(R.string.stop_polling);
+        } else {
+            toggleItem.setTitle(R.string.start_polling);
+        }
+    }
+
+
+    @Override
+    @TargetApi(11)
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_search:
                 getActivity().onSearchRequested();
                 return true;
+
             case R.id.menu_item_clear:
                 PreferenceManager.getDefaultSharedPreferences(getActivity())
                         .edit()
@@ -102,6 +124,17 @@ public class PhotoGalleryFragment extends Fragment {
                         .commit();
                 updateItems();
                 return true;
+
+            case R.id.menu_item_toggle_polling:
+                boolean shouldStartAlarm = !PollService.isServiceAlarmOn(getActivity());
+                PollService.setServiceAlarm(getActivity(), shouldStartAlarm);
+
+                // for post 3.0 versions
+                if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB)
+                    getActivity().invalidateOptionsMenu();
+
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -161,6 +194,7 @@ public class PhotoGalleryFragment extends Fragment {
         protected void onPostExecute(ArrayList<GalleryItem> items) {
             mItems = items;
             setupAdapter();
+
         }
     }
 
