@@ -4,6 +4,16 @@ package dk.incipio.photogallery;
 public class GalleryItem {
     private String mCaption;
     private String mId;
+    private String mUrl;
+    private String mOwner;
+
+    public String getOwner() {
+        return mOwner;
+    }
+
+    public void setOwner(String mOwner) {
+        this.mOwner = mOwner;
+    }
 
     public String getUrl() {
         return mUrl;
@@ -29,8 +39,9 @@ public class GalleryItem {
         mId = id;
     }
 
-    private String mUrl;
-
+    public String getPhotoPageUrl() {
+        return "http://www.flicker.com/photos/"+mOwner+"/"+mid;
+    }
     public String toString() {
         return mCaption;
     }

@@ -27,6 +27,8 @@ public class FlickerFetchr {
     private static final String EXTRA_SMALL_URL = "url_s";
     private static final String XML_PHOTO = "photo";
     private static final String XML_RESULT="result";
+    private static final String OWNER="owner";
+
     private String total;
 
     public byte[] getUrlBytes(String urlSpec) throws IOException {
@@ -124,11 +126,13 @@ public class FlickerFetchr {
                 String id = parser.getAttributeValue(null, "id");
                 String caption = parser.getAttributeValue(null, "title");
                 String smallUrl = parser.getAttributeValue(null, EXTRA_SMALL_URL);
+                String owner = parser.getAttributeValue(null, OWNER);
 
                 GalleryItem item = new GalleryItem();
                 item.setId(id);
                 item.setCaption(caption);
                 item.setUrl(smallUrl);
+                item.setOwner(owner);
                 items.add(item);
             }
 
