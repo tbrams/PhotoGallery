@@ -159,13 +159,14 @@ public class PhotoGalleryFragment extends VisibleFragment {
         mGridView = (GridView) v.findViewById(R.id.gridView);
         setupAdapter();
 
-        // Hook up the click listener to start a browser with the photo clicked
+        // Hook up the click listener to start PhotoPageActivity
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 GalleryItem item=mItems.get(position);
                 Uri photoPageUri = Uri.parse(item.getPhotoPageUrl());
-                Intent i = new Intent(Intent.ACTION_VIEW, photoPageUri);
+                Intent i = new Intent(getActivity(), PhotoPageActivity.class);
+                i.setData(photoPageUri);
 
                 startActivity(i);
             }

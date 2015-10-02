@@ -30,6 +30,8 @@
                 android:resource="@xml/searchable" />
         </activity>
 
+        <activity android:name=".PhotoPageActivity" />
+
         <service android:name=".PollService" />
 
         <receiver android:name=".StartupReceiver">
