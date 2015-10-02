@@ -37,6 +37,11 @@
                 <action android:name="ANDROID.INTENT.ACTION.BOOT_COMPLETED"/>
             </intent-filter>
         </receiver>
-    </application>
 
+        <receiver android:name=".NotificationReceiver" android:exported="false">
+            <intent-filter android:priority="-999" >
+                <action android:name="dk.incipio.photogallery.SHOW_NOTIFICATION" />
+            </intent-filter>
+        </receiver>
+    </application>
 </manifest>

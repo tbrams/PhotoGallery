@@ -1,9 +1,9 @@
 package dk.incipio.photogallery;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class PollService extends IntentService {
     private static final String TAG = "dk.incipio.photogallery.PollService";
-    private static final int POLL_INTERVAL = 1000*15; // check for news every 15 seconds
+    private static final int POLL_INTERVAL = 1000*5; // check for news every 5 seconds
     public static final String PREF_IS_ALARM_ON ="isAlarmOn";
     public static final String ACTION_SHOW_NOTIFICATION ="dk.incipio.photogallery.SHOW_NOTIFICATION";
     public static final String PERM_PRIVATE="dk.incipio.photogallery.PRIVATE";
@@ -66,10 +66,13 @@ public class PollService extends IntentService {
                     .setContentIntent(pi)
                     .setAutoCancel(true)
                     .build();
-            NotificationManager notificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            notificationManager.notify(0,notification);
 
-            sendBroadcast(new Intent(ACTION_SHOW_NOTIFICATION),PERM_PRIVATE);
+            // NotificationManager notificationManager= (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            // notificationManager.notify(0,notification);
+            // sendBroadcast(new Intent(ACTION_SHOW_NOTIFICATION),PERM_PRIVATE);
+
+            showBackgroundNotification(0, notification);
+
 
         } else {
             Log.i(TAG,"Old result: "+ resultId);
@@ -86,7 +89,7 @@ public class PollService extends IntentService {
         // p2: request
         // p3: Intent object
         // p4: Flags
-        PendingIntent pi = PendingIntent.getService(context,0, i, 0);
+        PendingIntent pi = PendingIntent.getService(context, 0, i, 0);
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
@@ -118,6 +121,19 @@ public class PollService extends IntentService {
         PendingIntent pi = PendingIntent.getService(context, 0, i, PendingIntent.FLAG_NO_CREATE);
 
         return pi!= null;
+    }
+
+    public void showBackgroundNotification(int requestCode, Notification notification) {
+        Intent i = new Intent(ACTION_SHOW_NOTIFICATION);
+        i.putExtra("REQUEST_CODE", requestCode);
+        i.putExtra("NOTIFICATION", notification);
+
+        // p3: result receiver
+        // p4: handler
+        // p5: initial value result code
+        // p6: initial value result data
+        // p7: initial value result extras
+        sendOrderedBroadcast(i, PERM_PRIVATE, null, null, Activity.RESULT_OK, null, null);
     }
 
 }
