@@ -40,7 +40,7 @@ public class GalleryItem {
     }
 
     public String getPhotoPageUrl() {
-        return "http://www.flicker.com/photos/"+mOwner+"/"+mid;
+        return "http://www.flicker.com/photos/"+mOwner+"/"+mId;
     }
     public String toString() {
         return mCaption;
