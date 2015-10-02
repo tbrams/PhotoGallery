@@ -30,4 +30,6 @@ public abstract class VisibleFragment extends Fragment {
         super.onPause();
         getActivity().unregisterReceiver(mOnShowNotification);
     }
+
+
 }
